@@ -11,7 +11,12 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 
-const NavMenu = ({ showMenu, setShowMenu, setShowNewFolderDialogue }) => {
+const NavMenu = ({
+  showMenu,
+  setShowMenu,
+  setShowNewFolderDialogue,
+  setCurrentDir,
+}) => {
   return showMenu ? (
     <div className="absolute top-0 left-0 z-50 w-screen h-screen flex">
       <div
@@ -137,6 +142,7 @@ export default function Navbar() {
           showMenu={showMenu}
           setShowMenu={setShowMenu}
           setShowNewFolderDialogue={setShowNewFolderDialogue}
+          setCurrentDir={setCurrentDir}
         />
       )}
 
