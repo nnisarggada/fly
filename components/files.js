@@ -1,6 +1,7 @@
 import AppContext from "@/pages/AppContext";
 import config from "@/public/config";
 import React, { useState, useEffect, useContext } from "react";
+import path from "path";
 import {
   AiFillFolder,
   AiFillHome,
@@ -9,13 +10,13 @@ import {
 } from "react-icons/ai";
 import {
   BsFileEarmarkImageFill,
-  BsFileEarmark,
   BsFileEarmarkMusicFill,
   BsFileEarmarkPdfFill,
   BsFileEarmarkPlayFill,
   BsFileEarmarkSlidesFill,
   BsFileEarmarkWordFill,
   BsFileEarmarkZipFill,
+  BsFillFileEarmarkTextFill,
 } from "react-icons/bs";
 
 const FileList = () => {
@@ -48,7 +49,6 @@ const FileList = () => {
     downloadLink.download = fileName;
     downloadLink.click();
   };
-
   const handleFolderClick = (folderPath) => {
     setCurrentDir(`${currentDir}/${folderPath}`);
   };
@@ -59,16 +59,30 @@ const FileList = () => {
     setCurrentDir(newDir);
   };
 
+  const folder = path.basename(currentDir);
+
   const FolderItem = ({ entry }) => {
+    let opacity = "";
+
+    if (entry.name.startsWith(".")) {
+      opacity = "opacity-60";
+    }
+
     return (
-      <div className="w-full h-20 bg-gray-800 rounded-lg flex items-center gap-2 p-4 cursor-pointer">
-        <AiFillFolder
-          onClick={() => handleFolderClick(entry.name)}
-          className="text-6xl"
-        />
-        <div onClick={() => handleFolderClick(entry.name)} className="w-full">
-          <h1 className="font-bold text-lg line-clamp-1">{entry.name}</h1>
-          <p className="text-md line-clamp-1">{entry.items} Items</p>
+      <div
+        className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
+      >
+        <div className="w-5/6 flex gap-4">
+          <AiFillFolder
+            onClick={() => handleFolderClick(entry.name)}
+            className="text-6xl"
+          />
+          <div onClick={() => handleFolderClick(entry.name)} className="w-2/3">
+            <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
+              {entry.name}
+            </h1>
+            <p className="text-md line-clamp-1">{entry.items} Items</p>
+          </div>
         </div>
         <div className="text-3xl w-12 h-full grid place-items-center">
           <AiOutlineMore onClick={() => console.log("More")} />
@@ -78,54 +92,63 @@ const FileList = () => {
   };
 
   const FileItem = ({ entry }) => {
+    let opacity = "";
+
+    if (entry.name.startsWith(".")) {
+      opacity = "opacity-60";
+    }
+
     return (
       <div
-        onClick={() => handleDownload(entry.name)}
-        className="w-full h-20 bg-gray-800 rounded-lg flex items-center gap-2 p-4 cursor-pointer"
+        className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
       >
-        {entry.fileType === "image" ? (
-          <BsFileEarmarkImageFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "doc" ? (
-          <BsFileEarmarkWordFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "pdf" ? (
-          <BsFileEarmarkPdfFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "ppt" ? (
-          <BsFileEarmarkSlidesFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "audio" ? (
-          <BsFileEarmarkMusicFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "video" ? (
-          <BsFileEarmarkPlayFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "zip" ? (
-          <BsFileEarmarkZipFill className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        {entry.fileType === "other" ? (
-          <BsFileEarmark className="text-6xl" />
-        ) : (
-          <></>
-        )}
-        <div className="w-full">
-          <h1 className="font-bold text-lg line-clamp-1">{entry.name}</h1>
-          <p className="text-md line-clamp-1">{entry.size}</p>
+        <div className="w-5/6 flex gap-4">
+          {entry.fileType === "image" ? (
+            <BsFileEarmarkImageFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "doc" ? (
+            <BsFileEarmarkWordFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "pdf" ? (
+            <BsFileEarmarkPdfFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "ppt" ? (
+            <BsFileEarmarkSlidesFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "audio" ? (
+            <BsFileEarmarkMusicFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "video" ? (
+            <BsFileEarmarkPlayFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "zip" ? (
+            <BsFileEarmarkZipFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          {entry.fileType === "other" ? (
+            <BsFillFileEarmarkTextFill className="text-6xl" />
+          ) : (
+            <></>
+          )}
+          <div onClick={() => handleDownload(entry.name)} className="w-2/3">
+            <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
+              {entry.name}
+            </h1>
+            <p className="text-md line-clamp-1">{entry.size}</p>
+          </div>
         </div>
         <div className="text-3xl w-12 h-full grid place-items-center">
           <AiOutlineMore onClick={() => console.log("More")} />
@@ -137,7 +160,10 @@ const FileList = () => {
   return (
     <div className="flex flex-col gap-6 p-4">
       {currentDir != config.homeDir && (
-        <div className="w-full flex justify-between items-center p-2 text-gray-400 text-3xl">
+        <div className="w-full flex justify-between items-center gap-4 text-gray-400 text-3xl">
+          <h1 className="text-xl font-black text-white text-left w-5/6 truncate">
+            {folder}
+          </h1>
           <AiOutlineRollback
             onClick={() => handleFolderBack()}
             className="cursor-pointer"
@@ -147,6 +173,9 @@ const FileList = () => {
             className="cursor-pointer"
           />
         </div>
+      )}
+      {folders.length === 0 && files.length === 0 && (
+        <h2 className="text-3xl text-center font-thin mt-10">No Files :/</h2>
       )}
       {folders.length > 0 && <h2 className="text-xl font-black">Folders</h2>}
       {folders.map((entry) => {

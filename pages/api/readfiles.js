@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 
   const getFileType = (fileType) => {
     const imageTypes = [".jpg", ".jpeg", ".png", ".gif"];
-    const docTypes = [".doc", ".docx", ".txt"];
+    const docTypes = [".doc", ".docx"];
     const pdfTypes = [".pdf"];
     const pptTypes = [".ppt", ".pptx"];
     const audioTypes = [".mp3", ".wav"];

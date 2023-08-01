@@ -1,5 +1,5 @@
 const data = {
-  homeDir: "/home/nnisarggada/Pictures",
+  homeDir: "/home/nnisarggada",
 };
 
 export default data;
