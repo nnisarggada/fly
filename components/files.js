@@ -19,8 +19,9 @@ import {
 } from "react-icons/bs";
 
 const FileList = () => {
-  const [filesAndDirs, setFilesAndDirs] = useState([]);
   const { currentDir, setCurrentDir } = useContext(AppContext);
+  const [files, setFiles] = useState([]);
+  const [folders, setFolders] = useState([]);
 
   const fetchFilesAndDirs = async () => {
     try {
@@ -28,7 +29,8 @@ const FileList = () => {
         `/api/readfiles?currentDir=${encodeURIComponent(currentDir)}`,
       );
       const data = await response.json();
-      setFilesAndDirs(data.filesAndDirs);
+      setFiles(data.files);
+      setFolders(data.folders);
     } catch (error) {
       console.error("Error fetching files and directories:", error);
     }
@@ -146,19 +148,13 @@ const FileList = () => {
           />
         </div>
       )}
-      <h2 className="text-xl font-black">Folders</h2>
-      {filesAndDirs.map((entry) => {
-        if (!entry.isFile) {
-          return <FolderItem key={entry.name} entry={entry} />;
-        }
-        return null;
+      {folders.length > 0 && <h2 className="text-xl font-black">Folders</h2>}
+      {folders.map((entry) => {
+        return <FolderItem key={entry.name} entry={entry} />;
       })}
-      <h2 className="text-xl font-black">Files</h2>
-      {filesAndDirs.map((entry) => {
-        if (entry.isFile) {
-          return <FileItem key={entry.name} entry={entry} />;
-        }
-        return null;
+      {files.length > 0 && <h2 className="text-xl font-black">Files</h2>}
+      {files.map((entry) => {
+        return <FileItem key={entry.name} entry={entry} />;
       })}
     </div>
   );

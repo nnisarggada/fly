@@ -53,6 +53,7 @@ export default async function handler(req, res) {
     const pptTypes = [".ppt", ".pptx"];
     const audioTypes = [".mp3", ".wav"];
     const videoTypes = [".mp4", ".avi", ".mkv"];
+    const zipTypes = [".zip"];
 
     if (imageTypes.includes(fileType)) {
       return "image";
@@ -66,6 +67,8 @@ export default async function handler(req, res) {
       return "audio";
     } else if (videoTypes.includes(fileType)) {
       return "video";
+    } else if (zipTypes.includes(fileType)) {
+      return "zip";
     } else {
       return "other";
     }
@@ -74,7 +77,10 @@ export default async function handler(req, res) {
   try {
     const files = await fs.promises.readdir(currentDir);
 
-    const filesAndDirs = await Promise.all(
+    const filesList = [];
+    const foldersList = [];
+
+    await Promise.all(
       files.map(async (entry) => {
         const entryPath = path.join(currentDir, entry);
         const stat = await fs.promises.stat(entryPath);
@@ -82,24 +88,24 @@ export default async function handler(req, res) {
         if (stat.isDirectory()) {
           const subFiles = await fs.promises.readdir(entryPath);
           const itemCount = subFiles.length;
-          return {
+          foldersList.push({
             name: entry,
             isFile: false,
             items: itemCount,
-          };
+          });
         } else {
-          return {
+          filesList.push({
             name: entry,
             isFile: true,
             size: formatFileSize(stat.size),
             lastModified: formatLastModified(stat.mtime),
             fileType: getFileType(path.extname(entry).toLowerCase()),
-          };
+          });
         }
       }),
     );
 
-    res.status(200).json({ filesAndDirs });
+    res.status(200).json({ files: filesList, folders: foldersList });
   } catch (error) {
     console.error("Error reading directory:", error);
     res.status(500).json({ error: "Failed to read files and directories" });
