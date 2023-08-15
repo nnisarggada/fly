@@ -44,10 +44,6 @@ const NavMenu = ({
           <AiFillFolderAdd className="text-3xl text-white" />
           <h1>New Folder</h1>
         </div>
-        <div className="w-full h-16 border-b-2 border-b-gray-500 flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-600">
-          <AiFillFileAdd className="text-3xl text-white" />
-          <h1>New File</h1>
-        </div>
       </div>
     </div>
   ) : null;
@@ -96,9 +92,9 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    document.body.style.overflow = showMenu ? "hidden" : "auto";
+    document.body.style.overflowY = showMenu ? "hidden" : "auto";
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflowY = "auto";
     };
   }, [showMenu]);
 
@@ -120,21 +116,19 @@ export default function Navbar() {
     <>
       {showSearch && <Searchbar setShowSearch={setShowSearch} />}
       {!showSearch && (
-        <nav className="w-full h-16 sticky top-0 z-30 flex items-center gap-4 bg-gray-900 p-4 text-2xl">
-          <div className="w-20 h-full flex items-center justify-start gap-4">
-            <AiOutlineMenu
-              onClick={handleMenuIconClick}
-              className="cursor-pointer"
-            />
-          </div>
-          <h1 className="font-black flex-grow text-center">N-CLOUD</h1>
-          <div className="w-20 h-full flex items-center justify-end gap-4">
-            <AiOutlineSearch
-              onClick={() => setShowSearch(true)}
-              className="cursor-pointer"
-            />
-            <AiOutlineMore className="cursor-pointer" />
-          </div>
+        <nav className="w-full h-16 sticky top-0 z-10 flex items-center gap-4 bg-gray-900 p-4 text-2xl">
+          <AiOutlineMenu
+            onClick={handleMenuIconClick}
+            className="cursor-pointer"
+          />
+          <h1 className="font-black flex-grow text-left text-xl">
+            Files Lovingly Yours
+          </h1>
+          <AiOutlineSearch
+            onClick={() => setShowSearch(true)}
+            className="cursor-pointer"
+          />
+          <AiOutlineMore className="cursor-pointer" />
         </nav>
       )}
       {showMenu && (

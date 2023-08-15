@@ -3,8 +3,12 @@ import config from "@/public/config";
 import React, { useState, useEffect, useContext } from "react";
 import path from "path";
 import {
+  AiFillCopy,
+  AiFillDelete,
+  AiFillEdit,
   AiFillFolder,
   AiFillHome,
+  AiOutlineDoubleRight,
   AiOutlineMore,
   AiOutlineRollback,
 } from "react-icons/ai";
@@ -18,6 +22,14 @@ import {
   BsFileEarmarkZipFill,
   BsFillFileEarmarkTextFill,
 } from "react-icons/bs";
+import {
+  FaArrowCircleRight,
+  FaCaretRight,
+  FaCopy,
+  FaEdit,
+  FaShareAlt,
+  FaTrash,
+} from "react-icons/fa";
 
 const FileList = () => {
   const { currentDir, setCurrentDir } = useContext(AppContext);
@@ -62,96 +74,177 @@ const FileList = () => {
   const folder = path.basename(currentDir);
 
   const FolderItem = ({ entry }) => {
+    const [showMenu, setShowMenu] = useState(false);
+
     let opacity = "";
 
     if (entry.name.startsWith(".")) {
       opacity = "opacity-60";
     }
 
-    return (
-      <div
-        className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
-      >
-        <div className="w-5/6 flex gap-4">
-          <AiFillFolder
-            onClick={() => handleFolderClick(entry.name)}
-            className="text-6xl"
-          />
-          <div onClick={() => handleFolderClick(entry.name)} className="w-2/3">
-            <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
-              {entry.name}
-            </h1>
-            <p className="text-md line-clamp-1">{entry.items} Items</p>
+    const MoreMenu = () => {
+      return (
+        <>
+          <div
+            className="fixed z-30 top-0 left-0 w-screen h-screen bg-black bg-opacity-50"
+            onClick={() => setShowMenu(false)}
+          ></div>
+          <div className="more-menu absolute z-30 top-2 right-2 w-48 h-56 bg-slate-700 bg-opacity-100 flex flex-col items-center justify-center shadow rounded-md p-4">
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaEdit className="" />
+              <h1>Rename</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaCopy className="" />
+              <h1>Copy</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaArrowCircleRight className="" />
+              <h1>Move</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaTrash className="" />
+              <h1>Delete</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaShareAlt className="" />
+              <h1>Share</h1>
+            </div>
           </div>
-        </div>
-        <div className="text-3xl w-12 h-full grid place-items-center">
-          <AiOutlineMore onClick={() => console.log("More")} />
+        </>
+      );
+    };
+
+    return (
+      <div className={`relative ${showMenu ? "z-10" : ""}`}>
+        {showMenu ? <MoreMenu /> : null}
+        <div
+          className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
+        >
+          <div className="w-5/6 flex gap-4">
+            <AiFillFolder
+              onClick={() => handleFolderClick(entry.name)}
+              className="text-6xl"
+            />
+            <div
+              onClick={() => {
+                handleFolderClick(entry.name);
+              }}
+              className="w-2/3"
+            >
+              <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
+                {entry.name}
+              </h1>
+              <p className="text-md line-clamp-1">{entry.items} Items</p>
+            </div>
+          </div>
+          <div className="relative text-3xl w-12 h-full grid place-items-center">
+            <AiOutlineMore onClick={() => setShowMenu(true)} />
+          </div>
         </div>
       </div>
     );
   };
 
   const FileItem = ({ entry }) => {
+    const [showMenu, setShowMenu] = useState(false);
+
     let opacity = "";
 
     if (entry.name.startsWith(".")) {
       opacity = "opacity-60";
     }
 
-    return (
-      <div
-        className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
-      >
-        <div className="w-5/6 flex gap-4">
-          {entry.fileType === "image" ? (
-            <BsFileEarmarkImageFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "doc" ? (
-            <BsFileEarmarkWordFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "pdf" ? (
-            <BsFileEarmarkPdfFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "ppt" ? (
-            <BsFileEarmarkSlidesFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "audio" ? (
-            <BsFileEarmarkMusicFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "video" ? (
-            <BsFileEarmarkPlayFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "zip" ? (
-            <BsFileEarmarkZipFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          {entry.fileType === "other" ? (
-            <BsFillFileEarmarkTextFill className="text-6xl" />
-          ) : (
-            <></>
-          )}
-          <div onClick={() => handleDownload(entry.name)} className="w-2/3">
-            <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
-              {entry.name}
-            </h1>
-            <p className="text-md line-clamp-1">{entry.size}</p>
+    const MoreMenu = () => {
+      return (
+        <>
+          <div
+            className="fixed z-30 top-0 left-0 w-screen h-screen bg-black bg-opacity-50"
+            onClick={() => setShowMenu(false)}
+          ></div>
+          <div className="more-menu absolute z-30 top-2 right-2 w-48 h-56 bg-slate-700 bg-opacity-100 flex flex-col items-center justify-center shadow rounded-md p-4">
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaEdit className="" />
+              <h1>Rename</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaCopy className="" />
+              <h1>Copy</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaArrowCircleRight className="" />
+              <h1>Move</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaTrash className="" />
+              <h1>Delete</h1>
+            </div>
+            <div className="flex w-full gap-4 items-center flex-grow text-2xl cursor-pointer">
+              <FaShareAlt className="" />
+              <h1>Share</h1>
+            </div>
           </div>
-        </div>
-        <div className="text-3xl w-12 h-full grid place-items-center">
-          <AiOutlineMore onClick={() => console.log("More")} />
+        </>
+      );
+    };
+
+    return (
+      <div className={`relative ${showMenu ? "z-10" : ""}`}>
+        {showMenu ? <MoreMenu /> : null}
+        <div
+          className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
+        >
+          <div className="w-5/6 flex gap-4">
+            {entry.fileType === "image" ? (
+              <BsFileEarmarkImageFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "doc" ? (
+              <BsFileEarmarkWordFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "pdf" ? (
+              <BsFileEarmarkPdfFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "ppt" ? (
+              <BsFileEarmarkSlidesFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "audio" ? (
+              <BsFileEarmarkMusicFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "video" ? (
+              <BsFileEarmarkPlayFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "zip" ? (
+              <BsFileEarmarkZipFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            {entry.fileType === "other" ? (
+              <BsFillFileEarmarkTextFill className="text-6xl" />
+            ) : (
+              <></>
+            )}
+            <div onClick={() => handleDownload(entry.name)} className="w-2/3">
+              <h1 className="font-bold text-lg line-clamp-1 overflow-ellipsis">
+                {entry.name}
+              </h1>
+              <p className="text-md line-clamp-1">{entry.size}</p>
+            </div>
+          </div>
+          <div className="text-3xl w-12 h-full grid place-items-center">
+            <AiOutlineMore onClick={() => setShowMenu(true)} />
+          </div>
         </div>
       </div>
     );

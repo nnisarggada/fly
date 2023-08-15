@@ -9,4 +9,5 @@
 body {
   @apply bg-gray-950;
   @apply text-white;
+  @apply overflow-x-hidden;
 }
