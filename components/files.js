@@ -30,6 +30,7 @@ import {
   FaShareAlt,
   FaTrash,
 } from "react-icons/fa";
+import Head from "next/head";
 
 const FileList = () => {
   const { currentDir, setCurrentDir } = useContext(AppContext);
@@ -188,8 +189,14 @@ const FileList = () => {
       );
     };
 
+    const currFolderName =
+      currentDir.split("/")[currentDir.split("/").length - 1];
+
     return (
       <div className={`relative ${showMenu ? "z-10" : ""}`}>
+        <Head>
+          <title>{currFolderName} | FLY</title>
+        </Head>
         {showMenu ? <MoreMenu /> : null}
         <div
           className={`w-full h-20 bg-gray-800 rounded-lg flex items-center justify-between gap-2 p-4 cursor-pointer ${opacity}`}
