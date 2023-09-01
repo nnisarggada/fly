@@ -1,5 +1,5 @@
 const data = {
-  homeDir: "/home/nnisarggada/GitRepos/fly",
+  homeDir: "/",
 };
 
 export default data;
